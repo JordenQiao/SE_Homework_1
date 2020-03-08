@@ -75,8 +75,11 @@ void output(string filename)
 	out << nodes.size() << endl;
 }
 
-void handleArg(int argc, char** argv)
+int main(int argc, char** argv)
 {
+	Node temp;
+	string inFile, outFile;
+
 	string type;
 	type = argv[1];
 	if (type == "-i") {
@@ -92,13 +95,7 @@ void handleArg(int argc, char** argv)
 	else {
 		cout << "WRONG ORDER!" << endl;
 	}
-	return;
-}
 
-int main(int argc, char** argv)
-{
-	Node temp;
-	handleArg(argc, argv);
 	readFile(inFile);
 
 	for (int i = 0; i < lines.size(); i++) {

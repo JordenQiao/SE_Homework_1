@@ -26,10 +26,8 @@ set<Node> nodes;
 vector<Line> lines;
 vector<Circle> circles;
 int NumOfGraph;
-string inFile, outFile;
 
 void readFile(string filename);
 void getLinePara(Line& line);
 bool isCross(Line& a, Line& b, Node& node);
 void output(string filename);
-void handleArg(int argc, char** argv);
