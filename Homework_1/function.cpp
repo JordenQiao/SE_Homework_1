@@ -56,6 +56,8 @@ void Function::readFile(string filename)
 			ss >> circle.x;
 			ss >> circle.y;
 			ss >> circle.r;
+			circle.node.first = circle.x;
+			circle.node.second = circle.y;
 			circles.push_back(circle);
 		}
 		else {
@@ -76,7 +78,7 @@ void Function::getLinePara(Line& line)
 	line.c = (double)line.x2 - line.x1;
 }
 
-bool Function::isCross(Line& a, Line& b, Node& node)
+bool Function::L2LIsCross(Line& a, Line& b, Node& node, bool flag)
 {
 	//if (a.isHorizontal && b.isHorizontal) {
 	//	return false;
@@ -105,6 +107,7 @@ bool Function::isCross(Line& a, Line& b, Node& node)
 	//node.second = a.k * node.first + a.b;
 	//return nodes.insert(make_pair(node.first, node.second)).second;
 
+	//ax+b=cy
 	double temp = a.a * b.c - a.c * b.a;
 	if (temp != 0) {
 		if (a.a == 0) {
@@ -115,7 +118,9 @@ bool Function::isCross(Line& a, Line& b, Node& node)
 			node.second = (a.a * b.b - a.b * b.a) / temp;
 			node.first = (node.second * a.c - a.b) / a.a;
 		}
-		nodes.insert(make_pair(node.first, node.second));
+		if (flag) {
+			nodes.insert(make_pair(node.first, node.second));
+		}
 	}
 	return true;
 }
@@ -124,6 +129,63 @@ void Function::output(string filename)
 {
 	ofstream out(filename);
 	out << nodes.size() << endl;
+}
+
+bool Function::C2CIsCross(Circle& a, Circle& b)
+{
+	double distance = getDistance(a.node, b.node);
+	double r2 = (a.r + b.r) * (a.r + b.r);
+	// 两个圆没有交点
+	if (distance > r2) {
+		return false;
+	}
+	Line temp;
+	temp.a = 2 * (b.x - a.x);
+	temp.b = a.x * a.x + a.y * a.y - b.x * b.x - b.y * b.y - a.r * a.r + b.r * b.r;
+	temp.c = 2 * (a.y - b.y);
+	C2LIsCross(a, temp);
+	return true;
+}
+
+double getDistance(Node& a, Node& b)
+{
+	return (a.first - b.first) * (a.first - b.first) + (a.second - b.second) * (a.second - b.second);
+}
+
+bool Function::C2LIsCross(Circle& circle, Line& line)
+{
+	Line temp;
+	Node node, vect;
+	double distance, r2;
+	temp.a = line.c;
+	temp.c = -line.a;
+	temp.b = temp.c * circle.y - temp.a * circle.x;
+	temp.x1 = circle.x;
+	temp.y1 = circle.y;
+	L2LIsCross(line, temp, node, false);		// temp为垂线，node为垂心
+	distance = getDistance(node, circle.node);
+	r2 = circle.r * circle.r;
+
+	cout << r2 << " " << distance << endl;
+	
+	// 线与圆没有交点
+	if (distance > r2) {
+		return false;
+	}
+	// 线与圆有交点
+	double dis = sqrt(r2 - distance);
+	// 线与圆有两个交点
+	if (dis > 0) {
+		vect.first = (double)(line.c) / sqrt(line.a * line.a + line.c * line.c) * dis;
+		vect.second = (double)(line.a) / sqrt(line.a * line.a + line.c * line.c) * dis;
+		nodes.insert(make_pair(node.first + vect.first, node.second + vect.second));
+		nodes.insert(make_pair(node.first - vect.first, node.second - vect.second));
+	}
+	// 线与圆有一个交点
+	else {
+		nodes.insert(node);
+	}
+	return true;
 }
 
 //void handleArg(int argc, char** argv)
@@ -157,7 +219,19 @@ int main()
 
 	for (int i = 0; i < lines.size(); i++) {
 		for (int j = i + 1; j < lines.size(); j++) {
-			function.isCross(lines[i], lines[j], temp);
+			function.L2LIsCross(lines[i], lines[j], temp, true);
+		}
+	}
+
+	for (int i = 0; i < circles.size(); i++) {
+		for (int j = 0; j < lines.size(); j++) {
+			function.C2LIsCross(circles[i], lines[j]);
+		}
+	}
+
+	for (int i = 0; i < circles.size(); i++) {
+		for (int j = i + 1; j < circles.size(); j++) {
+			function.C2CIsCross(circles[i], circles[j]);
 		}
 	}
 

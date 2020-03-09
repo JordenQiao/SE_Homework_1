@@ -16,6 +16,7 @@ using namespace std;
 //};
 
 typedef pair<double, double> Node;
+double getDistance(Node& a, Node& b);
 
 struct Line {
 	int x1, y1, x2, y2;
@@ -26,6 +27,7 @@ struct Line {
 
 struct Circle {
 	int x, y, r;
+	Node node;
 };
 
 class Function
@@ -33,7 +35,9 @@ class Function
 public:
 	void readFile(string filename);
 	void getLinePara(Line& line);
-	bool isCross(Line& a, Line& b, Node& node);
+	bool L2LIsCross(Line& a, Line& b, Node& node, bool flag);
+	bool C2CIsCross(Circle& a, Circle& b);
+	bool C2LIsCross(Circle& circle, Line& line);
 	void output(string filename);
 };
 
