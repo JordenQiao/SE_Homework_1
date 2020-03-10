@@ -78,7 +78,7 @@ void Function::getLinePara(Line& line)
 	line.c = (double)line.x2 - line.x1;
 }
 
-bool Function::L2LIsCross(Line& a, Line& b, Node& node, bool flag)
+bool Function::L2LIsCross(Line& a, Line& b, Node& node, bool flag)	// 直线与直线的交点
 {
 	//if (a.isHorizontal && b.isHorizontal) {
 	//	return false;
@@ -108,8 +108,10 @@ bool Function::L2LIsCross(Line& a, Line& b, Node& node, bool flag)
 	//return nodes.insert(make_pair(node.first, node.second)).second;
 
 	//ax+b=cy
+	// 判断是否有交点
 	double temp = a.a * b.c - a.c * b.a;
 	if (temp != 0) {
+		// 水平直线
 		if (a.a == 0) {
 			node.second = (double)a.y1;
 			node.first = (a.y1 * b.c - b.b) / b.a;
@@ -139,6 +141,10 @@ bool Function::C2CIsCross(Circle& a, Circle& b)
 	if (distance > r2) {
 		return false;
 	}
+	else if (distance < abs(a.r - b.r) * abs(a.r - b.r)) {
+		return false;
+	}
+	// 获取两圆交线的方程式
 	Line temp;
 	temp.a = 2 * (b.x - a.x);
 	temp.b = a.x * a.x + a.y * a.y - b.x * b.x - b.y * b.y - a.r * a.r + b.r * b.r;
@@ -237,6 +243,6 @@ int main(int argc, char** argv)
 {
 	Function function;
 	cout << function.Solve(argv[2], argv[4]) << endl;
-	//function.Solve("input2.txt", "output.txt");
+	//function.Solve("input7.txt", "output.txt");
 }
 

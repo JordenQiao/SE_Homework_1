@@ -4,17 +4,6 @@
 #include<unordered_map>
 using namespace std;
 
-//std::string DoubleToString(const double value, unsigned int precisionAfterPoint);
-//
-//class Node
-//{
-//public:
-//	double x, y;
-//	string getValue() {
-//		return DoubleToString(x, 10) + "#" + DoubleToString(y, 10);
-//	}
-//};
-
 
 typedef pair<double, double> Node;
 double getDistance(Node& a, Node& b);
@@ -67,14 +56,3 @@ private:
 	string inFile, outFile;
 };
 
-//struct Node {
-//	float x, y;
-//
-//	bool operator <(const Node& a) const
-//	{
-//		return x * x + y * y < a.x * a.x + a.y * a.y;
-//	}
-//}
-
-
-//void handleArg(int argc, char** argv);

@@ -73,5 +73,21 @@ namespace UnitTest1
 			int ret = function.Solve("input8.txt", "output.txt");
 			Assert::AreEqual(ret, 4);
 		}
+
+		TEST_METHOD(TestMethod9)
+		{
+			Function function;
+			// Á½Ô²ÏàÇÐ
+			int ret = function.Solve("input9.txt", "output.txt");
+			Assert::AreEqual(ret, 1);
+		}
+
+		TEST_METHOD(TestMethod10)
+		{
+			Function function;
+			// ÄÚº­
+			int ret = function.Solve("input10.txt", "output.txt");
+			Assert::AreEqual(ret, 0);
+		}
 	};
 }
