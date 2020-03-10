@@ -15,18 +15,37 @@ using namespace std;
 //	}
 //};
 
+
 typedef pair<double, double> Node;
 double getDistance(Node& a, Node& b);
 
+struct cmp {
+	bool operator() (const Node a, const Node b) const
+	{
+		if (abs(a.first - b.first) <= 1e-12 && abs(a.second - b.second) <= 1e-12)
+		{
+			return false;
+		}
+		else if (abs(a.first - b.first) > 1e-12)
+		{
+			return a.first < b.first;
+		} 
+		else 
+		{
+			return a.second < b.second;
+		}
+	}
+};
+
 struct Line {
-	int x1, y1, x2, y2;
+	long x1, y1, x2, y2;
 	double a, b, c;
 	bool isVertical = false;
 	bool isHorizontal = false;
 };
 
 struct Circle {
-	int x, y, r;
+	long x, y, r;
 	Node node;
 };
 
@@ -39,6 +58,13 @@ public:
 	bool C2CIsCross(Circle& a, Circle& b);
 	bool C2LIsCross(Circle& circle, Line& line);
 	void output(string filename);
+	int Solve(string inFile, string outFile);
+
+private:
+	set<Node, cmp> nodes;
+	vector<Line> lines;
+	vector<Circle> circles;
+	string inFile, outFile;
 };
 
 //struct Node {
@@ -50,10 +76,5 @@ public:
 //	}
 //}
 
-set<Node> nodes;
-vector<Line> lines;
-vector<Circle> circles;
-int NumOfGraph;
-string inFile, outFile;
 
 //void handleArg(int argc, char** argv);

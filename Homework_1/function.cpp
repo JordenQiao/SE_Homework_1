@@ -36,8 +36,8 @@ void Function::readFile(string filename)
 	Circle circle;
 
 	getline(file, str);
-	NumOfGraph = atoi(str.c_str());
-	for (int i = 0; i < NumOfGraph; i++) {
+	int cnt = atoi(str.c_str());
+	for (int i = 0; i < cnt; i++) {
 		getline(file, str);
 		stringstream ss;	//输入流
 		ss << str;
@@ -165,8 +165,6 @@ bool Function::C2LIsCross(Circle& circle, Line& line)
 	L2LIsCross(line, temp, node, false);		// temp为垂线，node为垂心
 	distance = getDistance(node, circle.node);
 	r2 = circle.r * circle.r;
-
-	cout << r2 << " " << distance << endl;
 	
 	// 线与圆没有交点
 	if (distance > r2) {
@@ -208,34 +206,37 @@ bool Function::C2LIsCross(Circle& circle, Line& line)
 //	return;
 //}
 
-int main()
+int Function::Solve(string inFile, string outFile)
 {
 	Node temp;
-	Function function;
-	//handleArg(argc, argv);
-	inFile = "input.txt";
-	outFile = "output.txt";
-	function.readFile(inFile);
-
+	readFile(inFile);
 	for (int i = 0; i < lines.size(); i++) {
 		for (int j = i + 1; j < lines.size(); j++) {
-			function.L2LIsCross(lines[i], lines[j], temp, true);
+			L2LIsCross(lines[i], lines[j], temp, true);
 		}
 	}
 
 	for (int i = 0; i < circles.size(); i++) {
 		for (int j = 0; j < lines.size(); j++) {
-			function.C2LIsCross(circles[i], lines[j]);
+			C2LIsCross(circles[i], lines[j]);
 		}
 	}
 
 	for (int i = 0; i < circles.size(); i++) {
 		for (int j = i + 1; j < circles.size(); j++) {
-			function.C2CIsCross(circles[i], circles[j]);
+			C2CIsCross(circles[i], circles[j]);
 		}
 	}
+	
+	ofstream out(outFile);
+	out << nodes.size() << endl;
+	return nodes.size();
+}
 
-	cout << nodes.size() << endl;
-	function.output(outFile);
+int main(int argc, char** argv)
+{
+	Function function;
+	cout << function.Solve(argv[2], argv[4]) << endl;
+	//function.Solve("input2.txt", "output.txt");
 }
 
